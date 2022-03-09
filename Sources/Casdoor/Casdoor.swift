@@ -90,7 +90,7 @@ public final class Casdoor {
             return token
         }
     }
-    func logout(idToken: String,state: String? = nil) -> EventLoopFuture<Bool> {
+    public func logout(idToken: String,state: String? = nil) -> EventLoopFuture<Bool> {
         let query = ["id_token_hint":idToken,"state":state ?? config.appName]
         let url:URI = "\(config.apiEndpoint)login/oauth/logout"
         return client.httpClient.post(url) { req in
