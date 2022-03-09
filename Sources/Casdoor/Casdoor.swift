@@ -62,7 +62,7 @@ public final class Casdoor {
             return token
         }
     }
-    public func varifyToken(token: String) throws -> Payload {
+    public func verifyToken(token: String) throws -> Payload {
         do {
             let signers = JWTSigners.init()
             signers.use(.rs256(key: try .certificate(pem: config.jwtSecret)))
