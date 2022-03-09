@@ -6,7 +6,7 @@ Casdoor SDK is simple to use. We will show you the steps below.
 .package(url: "https://github.com/casdoor/casdoor-ios-sdk.git", from: "x.x.x")
 ```
 and AsyncHTTPClient dependency to your target:
-```
+```swift
 .target(
    name: "MyApp", 
    dependencies: [
@@ -40,12 +40,12 @@ This package use AsyncHTTPClient as HTTPClient.
 AsyncHTTPClient is Asynchronous and non-blocking.
 If your application does not use SwiftNIO yet, it is acceptable to use `httpClientProvider: .createNew` but please make sure to share the returned `HTTPClient` instance throughout your whole application. Do not create a large number of `HTTPClient` instances with `httpClientProvider: .createNew`, this is very wasteful and might exhaust the resources of your program.
 ```swift
-       let client = CasdoorClient.init(options: .init(requestLogLevel: .info, errorLogLevel: .debug), httpClientProvider: .createNew, logger: .init(label: "casdoor-test"))
+let client = CasdoorClient.init(options: .init(requestLogLevel: .info, errorLogLevel: .debug), httpClientProvider: .createNew, logger: .init(label: "casdoor-test"))
 ```
 ## Step3. Init Casdoor
 The Casdoor Contains all APIs
 ```swift
-   let casdoor:Casdoor = .init(client:client,config:config)
+let casdoor:Casdoor = .init(client:client,config:config)
 ```
 ## Step3. Authorize with the Casdoor server
 At this point, we should use some ways to verify with the Casdoor server.  
@@ -58,8 +58,8 @@ of verification as `APP`, and Casdoor as `Casdoor`.
    with parameters and get back a JSON file.  
 
 casdoor-ios-sdk support the url,you can use in webview or safariView
-```
-   casdoor.getSigninUrl(scope:nil,state:nil)
+```swift
+casdoor.getSigninUrl(scope:nil,state:nil)
 ```
 Hints:
 1. `redirect_uri` is the URL that your `APP` is configured to
