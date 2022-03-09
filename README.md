@@ -47,7 +47,7 @@ The Casdoor Contains all APIs
 ```swift
 let casdoor:Casdoor = .init(client:client,config:config)
 ```
-## Step3. Authorize with the Casdoor server
+## Step4. Authorize with the Casdoor server
 At this point, we should use some ways to verify with the Casdoor server.  
 
 To start, we want you understand clearly the verification process of Casdoor.
