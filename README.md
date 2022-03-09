@@ -5,7 +5,7 @@ Casdoor SDK is simple to use. We will show you the steps below.
 ```swift
 .package(url: "https://github.com/casdoor/casdoor-ios-sdk.git", from: "x.x.x")
 ```
-and AsyncHTTPClient dependency to your target:
+and Casdoor dependency to your target:
 ```swift
 .target(
    name: "MyApp", 
