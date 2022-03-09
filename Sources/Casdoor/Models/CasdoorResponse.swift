@@ -21,7 +21,7 @@ struct CasdoorResponse<D1,D2>: Decodable where D1:Decodable,D2:Decodable {
     let data2: D2?
     
     func isOk() throws {
-        guard status == "error" else {
+        if status == "error" {
             throw CasdoorError.init(error: .responseMessage(msg))
         }
     }
