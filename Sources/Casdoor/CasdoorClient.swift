@@ -23,7 +23,7 @@ public final class CasdoorClient {
     static let globalRequestID = NIOAtomic<Int>.makeAtomic(value: 0)
     let httpClient: EventLoopHTTPClient
     let httpClientProvider: HTTPClientProvider
-    /// EventLoopGroup used by AWSClient
+    /// EventLoopGroup used by CasdoorClient
     public let eventLoopGroup: EventLoopGroup
     /// Logger used for non-request based output
     let clientLogger: Logger
