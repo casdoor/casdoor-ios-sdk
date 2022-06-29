@@ -67,7 +67,7 @@ public final class Casdoor {
             let signers = JWTSigners.init()
             signers.use(.rs256(key: try .certificate(pem: config.jwtSecret)))
             let payload = try signers.verify(token, as: Payload.self)
-            guard payload.nonce != self.nonce else {
+            guard payload.nonce == self.nonce else {
                 throw CasdoorError.init(error: .invalidJwt("nonce don't match."))
             }
             return payload
