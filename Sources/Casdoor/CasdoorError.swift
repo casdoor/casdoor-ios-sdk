@@ -17,8 +17,6 @@ import Foundation
 public struct CasdoorError: Swift.Error,CustomStringConvertible {
     public var description: String {
         switch error {
-        case .alreadyShutdown:
-            return "The CasdoorClient is already shutdown"
         case .invalidURL:
             return """
             The request url is invalid format.
@@ -32,7 +30,6 @@ public struct CasdoorError: Swift.Error,CustomStringConvertible {
     }
     
     enum Error {
-        case alreadyShutdown
         case invalidURL
         case responseMessage(String)
         case invalidJwt(String)
@@ -40,8 +37,6 @@ public struct CasdoorError: Swift.Error,CustomStringConvertible {
 
     let error: Error
 
-    /// client has already been shutdown
-    public static var alreadyShutdown: CasdoorError { .init(error: .alreadyShutdown) }
     /// URL provided to client is invalid
     public static var invalidURL: CasdoorError { .init(error: .invalidURL) }
 }

@@ -21,33 +21,23 @@ Initialization requires 5 parameters, which are all str type:
 | endpoint         | Yes  | Casdoor Server Url, such as `http://localhost:8000` |
 | clientID         | Yes  | Application.clientID                              |
 | appName           | Yes  | Application.name                           |
-| jwtSecret        | Yes  | Same as Casdoor JWT secret                         |
 | apiEndpoint       | NO  | Casdoor Api Url, default endpoint + "/api/"   |
 | organizationName | Yes  |Organization name
 ```swift
-let jwtKey = "jwt secret"
 let config:CasdoorConfig = .init(
             endpoint: "http://localhost:8000",
             clientID: "ced4d6db2f4644b85a75",
             organizationName: "organization_6qvtvh",
-            redirectUri: "http://localhost:9000/callback",
+            redirectUri: "casdoor://callback",
             appName: "application_y38644",
-            jwtSecret: jwtKey.data(using: .utf8)!
      )
 ```
-## Step2. Init CasdoorClient
-This package use AsyncHTTPClient as HTTPClient.
-AsyncHTTPClient is Asynchronous and non-blocking.
-If your application does not use SwiftNIO yet, it is acceptable to use `httpClientProvider: .createNew` but please make sure to share the returned `HTTPClient` instance throughout your whole application. Do not create a large number of `HTTPClient` instances with `httpClientProvider: .createNew`, this is very wasteful and might exhaust the resources of your program.
-```swift
-let client = CasdoorClient.init(options: .init(requestLogLevel: .info, errorLogLevel: .debug), httpClientProvider: .createNew, logger: .init(label: "casdoor-test"))
-```
-## Step3. Init Casdoor
+## Step2. Init Casdoor
 The Casdoor Contains all APIs
 ```swift
-let casdoor:Casdoor = .init(client:client,config:config)
+let casdoor:Casdoor = .init(config:config)
 ```
-## Step4. Authorize with the Casdoor server
+## Step3. Authorize with the Casdoor server
 At this point, we should use some ways to verify with the Casdoor server.  
 
 To start, we want you understand clearly the verification process of Casdoor.
@@ -63,37 +53,11 @@ casdoor.getSigninUrl(scope:nil,state:nil)
 ```
 Hints:
 1. `redirect_uri` is the URL that your `APP` is configured to
-listen to the response from `Casdoor`. For example, if your `redirect_uri` is `https://forum.casbin.com/callback`, then Casdoor will send a request to this URL along with two parameters `code` and `state`, which will be used in later steps for authentication. 
+listen to the response from `Casdoor`. For example, if your `redirect_uri` is `casdoor://callback`, then Casdoor will send a request to this URL along with two parameters `code` and `state`, which will be used in later steps for authentication. 
 2. `state` is usually your Application's name, you can find it under the `Applications` tab in `Casdoor`, and the leftmost `Name` column gives each application's name.
-3. After Casdoor verification passed, it will be redirected to your `redirect_uri`, like `http://localhost:9000/callback?code=xxx&state=yyyy`.you can catch it in WKNavigationDelegate,get the `code` and `state`, then call `requestOauthAccessToken(code:,state:)` and parse out jwt token.
+3. The authorize URL allows the user to connect to a provider and give access to your application.You can use WKWebView,SFSafariViewController or ASWebAuthenticationSession if you want.
+4. After Casdoor verification passed, it will be redirected to your `redirect_uri`, like `casdoor://callback?code=xxx&state=yyyy`.you can catch it and get the `code` and `state`, then call `requestOauthAccessToken(code:,state:)` and parse out jwt token. 
 
-``` swift
-struct Code:Decodable {
-    let code: String
-}
-extension OauthWebView: WKNavigationDelegate {
-    func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
-        if let url = navigationAction.request.url ,url.absoluteString.hasPrefix("http://localhost:9000/callback")
-        {
-            decisionHandler(.cancel)
-            let uri = URI.init(string: url.absoluteString)
-            let code = try uri.decode(Code.self)
-            self.casdoor
-                .requestOauthAccessToken(code: code.code)
-                .whenSuccess { tokenRes in
-                  do {
-                   //verify and parse jwt token
-                   let user =  try self.casdoor.varifyToken(token:tokenRes.accessToken)
-                   // save token
-                       ....
-                   } catch  {
-                        ...    
-                   }
-                }
-            self.navigationController?.popViewController(animated: true)
-        }
-        decisionHandler(.allow)
-    }
-}
-```
+# Example
+See at: https://github.com/casdoor/casdoor-ios-example
 
