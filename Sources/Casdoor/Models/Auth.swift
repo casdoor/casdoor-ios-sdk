@@ -11,8 +11,8 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-
 import Foundation
+import AF
 
 struct CodeRequestQuery: Encodable {
     let clientID: String
@@ -46,6 +46,10 @@ struct CodeRequestQuery: Encodable {
         self.codeChallengeMethod = "S256"
         self.nonce = nonce
         self.codeChallenge = Utils.generateCodeChallenge(codeVerifier)
+    }
+    
+    func toUrl(request: URLRequest) throws -> URLRequest {
+       try URLEncodedFormParameterEncoder.default.encode(self, into: request)
     }
 }
 

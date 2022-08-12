@@ -21,11 +21,9 @@ public struct CasdoorConfig {
         organizationName: String,
         redirectUri: String,
         appName: String,
-        jwtSecret: Data,
         apiEndpoint: String? = nil
         ) {
         self.clientID = clientID
-        self.jwtSecret = jwtSecret
         self.organizationName = organizationName
         self.redirectUri = redirectUri
         self.appName = appName
@@ -38,7 +36,6 @@ public struct CasdoorConfig {
     }
     
     public let clientID: String
-    public let jwtSecret: Data
     public let organizationName: String
     public let redirectUri: String
     public let apiEndpoint: String
