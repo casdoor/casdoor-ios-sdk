@@ -14,7 +14,7 @@
 
 import Foundation
 
-public struct CasdoorConfig {
+public struct CasdoorConfig: Sendable {
     public init(
         endpoint: String,
         clientID: String,
@@ -29,12 +29,12 @@ public struct CasdoorConfig {
         self.appName = appName
         self.endpoint = formatEndpoint(url: endpoint)
         if let apiEndpoint = apiEndpoint {
-            self.apiEndpoint = formatEndpoint(url:apiEndpoint)
+            self.apiEndpoint = formatEndpoint(url: apiEndpoint)
         } else {
             self.apiEndpoint = self.endpoint + "api/"
         }
     }
-    
+
     public let clientID: String
     public let organizationName: String
     public let redirectUri: String
@@ -43,7 +43,7 @@ public struct CasdoorConfig {
     public let appName: String
 }
 
-fileprivate func formatEndpoint(url:String) -> String {
+fileprivate func formatEndpoint(url: String) -> String {
     let url = url.trimmingCharacters(in: .whitespaces)
     return url.hasSuffix("/") ? url : url + "/"
 }

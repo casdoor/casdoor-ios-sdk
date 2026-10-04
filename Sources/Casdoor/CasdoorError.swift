@@ -14,29 +14,52 @@
 
 import Foundation
 
-public struct CasdoorError: Swift.Error,CustomStringConvertible {
-    public var description: String {
-        switch error {
-        case .invalidURL:
-            return """
-            The request url is invalid format.
-            This error is internal. So please make a issue on https://github.com/casdoor/casdoor-ios-sdk/issues to solve it.
-            """
-        case .responseMessage(let s):
-            return "response error: \(s)"
-        case .invalidJwt(let s):
-            return "invalidJWT: \(s)"
-        }
-    }
-    
-    enum Error {
+public struct CasdoorError: Swift.Error, CustomStringConvertible, LocalizedError, Sendable {
+    public enum Kind: Equatable, Sendable {
+        /// A URL built from the config is malformed, check `endpoint` and `apiEndpoint`.
         case invalidURL
+        /// Casdoor API returned `{"status": "error", "msg": ...}`.
         case responseMessage(String)
+        /// OAuth endpoint returned `{"error": ..., "error_description": ...}`.
+        case oauth(error: String, description: String?)
+        /// The server answered with something that is not the expected JSON,
+        /// for example an HTML 404 page when `endpoint` points to the wrong host.
+        case invalidResponse(statusCode: Int, body: String)
         case invalidJwt(String)
+        /// The redirect URL passed to `handleCallback(url:)` has no code or a wrong state.
+        case invalidCallback(String)
+        /// `requestOauthAccessToken` was called before `getSigninUrl` / `getSignupUrl`
+        /// on this `Casdoor` instance, so there is no PKCE code verifier.
+        case missingCodeVerifier
     }
 
-    let error: Error
+    public let kind: Kind
+
+    public init(kind: Kind) {
+        self.kind = kind
+    }
 
     /// URL provided to client is invalid
-    public static var invalidURL: CasdoorError { .init(error: .invalidURL) }
+    public static var invalidURL: CasdoorError { .init(kind: .invalidURL) }
+
+    public var description: String {
+        switch kind {
+        case .invalidURL:
+            return "invalid URL, check endpoint and apiEndpoint in CasdoorConfig"
+        case .responseMessage(let msg):
+            return "response error: \(msg)"
+        case .oauth(let error, let description):
+            return "oauth error: \(error)" + (description.map { ", \($0)" } ?? "")
+        case .invalidResponse(let statusCode, let body):
+            return "unexpected response (HTTP \(statusCode)): \(body)"
+        case .invalidJwt(let msg):
+            return "invalid JWT: \(msg)"
+        case .invalidCallback(let msg):
+            return "invalid callback: \(msg)"
+        case .missingCodeVerifier:
+            return "no PKCE code verifier, call getSigninUrl() on the same Casdoor instance before exchanging the code"
+        }
+    }
+
+    public var errorDescription: String? { description }
 }
