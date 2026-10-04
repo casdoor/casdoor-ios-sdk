@@ -1,0 +1,45 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+
+jobs:
+
+  test-macos:
+    runs-on: macos-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run unit tests
+        run: swift test
+
+      - name: Build for iOS
+        run: xcodebuild build -scheme Casdoor -destination 'generic/platform=iOS' CODE_SIGNING_ALLOWED=NO
+
+  test-linux:
+    runs-on: ubuntu-latest
+    container: swift:6.1
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run unit tests
+        run: swift test
+
+  semantic-release:
+    needs: [test-macos, test-linux]
+    runs-on: ubuntu-latest
+    steps:
+
+      - uses: actions/checkout@v4
+      - name: Run semantic-release
+        if: github.repository == 'casdoor/casdoor-ios-sdk' && github.event_name == 'push'
+        run: |
+          npm install --save-dev semantic-release@17.2.4
+          npx semantic-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

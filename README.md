@@ -1,5 +1,17 @@
 # casdoor-ios-sdk
 
+<p align="center">
+  <a href="#badge">
+    <img alt="semantic-release" src="https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg">
+  </a>
+  <a href="https://github.com/casdoor/casdoor-ios-sdk/actions/workflows/ci.yml">
+    <img alt="GitHub Workflow Status (branch)" src="https://img.shields.io/github/actions/workflow/status/casdoor/casdoor-ios-sdk/ci.yml?branch=master">
+  </a>
+  <a href="https://github.com/casdoor/casdoor-ios-sdk/releases/latest">
+    <img alt="GitHub Release" src="https://img.shields.io/github/v/release/casdoor/casdoor-ios-sdk.svg">
+  </a>
+</p>
+
 Casdoor's SDK for iOS, macOS, tvOS and watchOS. It signs users in with the OAuth 2.0 authorization code flow with PKCE, so the app does not need a client secret. No third-party dependencies.
 
 ## Install
@@ -7,7 +19,7 @@ Casdoor's SDK for iOS, macOS, tvOS and watchOS. It signs users in with the OAuth
 Swift Package Manager:
 
 ```swift
-.package(url: "https://github.com/casdoor/casdoor-ios-sdk.git", from: "2.0.0")
+.package(url: "https://github.com/casdoor/casdoor-ios-sdk.git", from: "1.0.0")
 ```
 
 ```swift
